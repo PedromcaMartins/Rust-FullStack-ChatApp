@@ -1,11 +1,11 @@
-#[macro_use] extern crate rocket;
+use rocket::fairing::AdHoc;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
+#[macro_use] extern crate rocket;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    rocket::build()
+        .manage(backend::AppState::new())
+        .mount("/", backend::routes())
+        .attach(AdHoc::on_ignite("Database Migrations", backend::run_migrations))
 }
