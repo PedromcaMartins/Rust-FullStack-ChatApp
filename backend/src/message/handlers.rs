@@ -1,19 +1,28 @@
 use chrono::Utc;
 
-use crate::{message::dtos::{MessageResponseDTO, NewMessageRequestDTO}, message::models::Message, AppState};
+use crate::message::dtos::{MessageResponseDTO, NewMessageRequestDTO};
 
-pub async fn get_messages(state: &AppState) -> Vec<MessageResponseDTO> {
-    let messages = state.messages.lock().await;
-    messages.iter().map(|message| message.clone().into()).collect()
+use super::repository::{insert_message_to_db, load_messages_from_db};
+
+pub fn get_messages(
+    conn: &mut diesel::SqliteConnection
+) -> Vec<MessageResponseDTO> {
+    load_messages_from_db(conn)
+        .unwrap()
+        .iter()
+        .map(|m| m.clone().into())
+        .collect()
 }
 
-pub async fn post_message(state: &AppState, new_message: NewMessageRequestDTO) -> MessageResponseDTO {
-    let mut messages = state.messages.lock().await;
-    let message = Message {
-        id: state.get_new_message_id().unwrap(), 
-        timestamp: Utc::now().to_rfc3339(),
-        content: new_message.content
-    };
-    messages.push(message.clone());
-    message.into()
+pub fn post_message(
+    conn: &mut diesel::SqliteConnection, 
+    new_message: NewMessageRequestDTO
+) -> MessageResponseDTO {
+    insert_message_to_db(
+        conn, 
+        Utc::now().to_rfc3339(), 
+        new_message.content
+    )
+        .unwrap()
+        .into()
 }

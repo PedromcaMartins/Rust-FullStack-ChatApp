@@ -16,6 +16,8 @@ target/
 # Ignore SQLite database files
 *.db
 *.sqlite3
+backend/sqlite
+backend/src/schema.rs
 
 # Track migrations folder
 !/migrations

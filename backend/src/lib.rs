@@ -1,11 +1,12 @@
 mod message;
 
 mod routes;
-mod state;
 mod errors;
 mod db;
 
+mod schema;
+
 pub use routes::routes;
 
-pub use state::AppState;
 pub use db::run_migrations;
+pub use db::DbConn;

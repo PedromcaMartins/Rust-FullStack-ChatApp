@@ -1,13 +1,24 @@
-use rocket::{get, post, serde::json::Json, State};
+use rocket::{get, post, serde::json::Json};
 
-use crate::{message::dtos::{MessageResponseDTO, NewMessageRequestDTO}, message::handlers, AppState};
+use crate::{message::{dtos::{MessageResponseDTO, NewMessageRequestDTO}, handlers}, DbConn};
 
 #[get("/messages")]
-pub async fn get_messages(state: &State<AppState>) -> Json<Vec<MessageResponseDTO>> {
-    Json(handlers::get_messages(state).await)
+pub async fn get_messages(
+    conn: DbConn
+) -> Json<Vec<MessageResponseDTO>> {
+    Json(
+        conn.run(handlers::get_messages).await
+    )
 }
 
 #[post("/messages", data="<new_message>")]
-pub async fn post_message(state: &State<AppState>, new_message: Json<NewMessageRequestDTO>) -> Json<MessageResponseDTO> {
-    Json(handlers::post_message(state, new_message.into_inner()).await)
+pub async fn post_message(
+    conn: DbConn, 
+    new_message: Json<NewMessageRequestDTO>
+) -> Json<MessageResponseDTO> {
+    Json(
+        conn.run(|c| 
+            handlers::post_message(c, new_message.into_inner())
+        ).await
+    )
 }

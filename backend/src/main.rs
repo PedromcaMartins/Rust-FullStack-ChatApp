@@ -5,7 +5,7 @@ use rocket::fairing::AdHoc;
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .manage(backend::AppState::new())
+        .attach(backend::DbConn::fairing())
         .mount("/", backend::routes())
         .attach(AdHoc::on_ignite("Database Migrations", backend::run_migrations))
 }
