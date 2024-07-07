@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use rocket::tokio::sync::Mutex;
 
-use crate::models::message::Message;
+use crate::message::models::Message;
 
 pub struct AppState {
     pub messages: Arc<Mutex<Vec<Message>>>,

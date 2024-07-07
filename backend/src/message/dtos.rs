@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::models::message::Message;
+use crate::message::models::Message;
 
 #[derive(Deserialize)]
 pub struct NewMessageRequestDTO {

@@ -1,11 +1,11 @@
 use rocket::{get, routes, Route};
 
-mod message;
+use crate::message;
 
 pub fn routes() -> Vec<Route> {
     routes![
         index, 
-        message::get_messages, message::post_message
+        message::routes::get_messages, message::routes::post_message
     ]
 }
 

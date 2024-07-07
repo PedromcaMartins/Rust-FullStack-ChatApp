@@ -1,6 +1,6 @@
 use chrono::Utc;
 
-use crate::{dtos::message::{MessageResponseDTO, NewMessageRequestDTO}, models::message::Message, AppState};
+use crate::{message::dtos::{MessageResponseDTO, NewMessageRequestDTO}, message::models::Message, AppState};
 
 pub async fn get_messages(state: &AppState) -> Vec<MessageResponseDTO> {
     let messages = state.messages.lock().await;
